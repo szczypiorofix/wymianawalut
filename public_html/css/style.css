@@ -1,0 +1,58 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-06-30, 12:45:38
+    Author     : Piotrek
+*/
+
+@CHARSET "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+html, body {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #eeeeee;
+    background-color: #555555;
+    width: 100%;
+    margin: 10px 0 10px 0;
+}
+
+p {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+#currentValues {
+    margin-top: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid gray;
+    padding: 5px;
+    width: 75%;
+}
+
+.maindiv {
+    margin: 0 auto;
+}
+
+.maindiv h3 {
+    text-align: center;
+}
+
+.centered {
+    text-align: center;
+}
+
+tr, th, td {
+    text-align: center;
+}
+
+.centered table {
+    width: 90%;
+    margin: auto;
+}
