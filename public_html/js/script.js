@@ -37,22 +37,15 @@ var responseData = {
     showResults: function(e) {
         e.innerHTML = '';
         var tab = document.createElement("table");
-        var th1 = document.createElement("th");
-        var th2 = document.createElement("th");
         var tr = document.createElement("tr");
-        var tbody = document.createElement("tbody");
-
         var td = document.createElement("td");
-        td.appendChild(document.createTextNode("Waluta"));
-        th1.appendChild(td);
-        tr.appendChild(th1);
-        
-        var td = document.createElement("td");
-        td.appendChild(document.createTextNode("Wartość"));
-        th2.appendChild(td);
-        tr.appendChild(th2);
-        tbody.appendChild(tr);
-        
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode("Waluta"));
+        tr.appendChild(th);
+        th = document.createElement("th");
+        th.appendChild(document.createTextNode("Wartość"));
+        tr.appendChild(th);
+        tab.appendChild(tr);
         
         this.rates.forEach(function(item, index) {
             tr = document.createElement("tr");
@@ -62,9 +55,11 @@ var responseData = {
             td = document.createElement("td");
             td.appendChild(document.createTextNode(item.val));
             tr.appendChild(td);
-            tbody.appendChild(tr);
+            tab.appendChild(tr);
         });
-        tab.appendChild(tbody);
+        
+        
+               
         e.appendChild(tab);
         
         //e.innerHTML = '<table><thead><tr><th>Waluta</th><th>Wartość</th></tr></thead><tbody>';
