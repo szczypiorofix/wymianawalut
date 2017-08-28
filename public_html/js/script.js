@@ -57,15 +57,8 @@ var responseData = {
             tr.appendChild(td);
             tab.appendChild(tr);
         });
-        
-        
-               
+              
         e.appendChild(tab);
-        
-        //e.innerHTML = '<table><thead><tr><th>Waluta</th><th>Wartość</th></tr></thead><tbody>';
-
-        //e.innerHTML += '<tr><td>END</td> <td>END</td></tr>';
-        //e.innerHTML += '</tbody></table>';
     },
     setCurrencyInOptions: function(def) {
         if (def !== null) {
@@ -88,7 +81,6 @@ window.onload = function() {
     currencySelect.addEventListener('change', function(evt) {
         getJSON('https://api.fixer.io/latest?base='+evt.srcElement.value, function(err, data) {
             if (err === null) {
-                //console.log(data);
                 r = data;
                 responseData.base = r.base;
                 responseData.date = r.date;
@@ -97,7 +89,8 @@ window.onload = function() {
                 responseData.setCurrencyInOptions();
             }
             else {
-                console.log('Błąd połączenia z API !!! Status request: '+err);
+                console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
+                curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
             }
         });
     });
@@ -122,7 +115,8 @@ window.onload = function() {
             responseData.setCurrencyInOptions('PLN');
         }
         else {
-            console.log('Błąd połączenia z API !!! Status request: '+err);
+            console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
+            curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
         }
     });
 };
