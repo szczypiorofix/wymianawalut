@@ -1,9 +1,4 @@
 
-var curValDiv = document.getElementById('currentValues');
-var inputValue = document.getElementById('inputValue');
-var currencySelect = document.getElementById('currencySelect');
-var r = null;
-
 var currencies = [
     {country: 'Afganistan', code: 'AFA', name: 'Afgani'},
     {country: 'Albania', code: 'ALL', name: 'Lek'},
@@ -185,20 +180,7 @@ var currencies = [
 ];
 
 
-var getJSON = function(url, callback) {
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.open('GET', url, true);
-    httpRequest.responseType = 'json';
-    httpRequest.onload = function() {
-        if (this.status === 200) {
-            callback(null, httpRequest.response);
-        }
-        else {
-            callback(httpRequest.status, httpRequest.response);
-        }
-    };
-    httpRequest.send();
-};
+
 
 var responseData = {
     base: '',
@@ -280,55 +262,182 @@ var responseData = {
     }
 };
 
-window.onload = function() {
+//window.onload = function() {
+//
+//    currencySelect.addEventListener('change', function(evt) {
+//        getJSON('https://api.fixer.io/latest?base='+evt.srcElement.value, function(err, data) {
+//            if (err === null) {
+//                r = data;
+//                responseData.base = r.base;
+//                responseData.date = r.date;
+//                responseData.calc(r.rates, inputValue.value);
+//                responseData.showResults(curValDiv);
+//                responseData.setCurrencyInOptions();
+//            }
+//            else {
+//                console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
+//                curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
+//            }
+//        });
+//    });
+//    
+//    inputValue.addEventListener('input', function() {
+//        responseData.calc(r.rates, this.value);
+//        responseData.showResults(curValDiv);
+//    });
+//    
+//    inputValue.addEventListener('change', function() {
+//        responseData.calc(r.rates, this.value);
+//        responseData.showResults(curValDiv);
+//    });
+//    
+//    getJSON('https://api.fixer.io/latest?base=USD', function(err, data) {
+//        if (err === null) {
+//            r = data;
+//            responseData.base = r.base;
+//            responseData.date = r.date;
+//            responseData.calc(r.rates);
+//            responseData.showResults(curValDiv);
+//            responseData.setCurrencyInOptions('USD');
+//        }
+//        else {
+//            console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
+//            curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
+//        }
+//    });
+//};
 
-    var app = new Vue({
-        el: '#app',
-        data: {
-            message: 'Hello Vue!'
-        }
-    })
 
 
-    currencySelect.addEventListener('change', function(evt) {
-        getJSON('https://api.fixer.io/latest?base='+evt.srcElement.value, function(err, data) {
-            if (err === null) {
-                r = data;
-                responseData.base = r.base;
-                responseData.date = r.date;
-                responseData.calc(r.rates);
-                responseData.showResults(curValDiv);
-                responseData.setCurrencyInOptions();
-            }
-            else {
-                console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
-                curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
-            }
+var currencyCalc = {
+    root: null,
+    responseData: {},
+    htmlElements: {},
+    base: null,
+    rates: [],
+    
+    init: function(root, url) {
+        let self = this;
+        this.root = root;
+        this.htmlElements.curValDiv = document.getElementById('currentValues');
+        this.htmlElements.inputValue = document.getElementById('inputValue');
+        this.htmlElements.currencySelect = document.getElementById('currencySelect');
+        this.getJson(url);
+        
+        this.htmlElements.inputValue.addEventListener('input', function() {
+            self.calc(self.responseData.rates, this.value);
+            self.showResults(self.htmlElements.curValDiv);
         });
-    });
-    
-    inputValue.addEventListener('input', function() {
-        responseData.calc(r.rates, this.value);
-        responseData.showResults(curValDiv);
-    });
-    
-    inputValue.addEventListener('change', function() {
-        responseData.calc(r.rates, this.value);
-        responseData.showResults(curValDiv);
-    });
-    
-    getJSON('https://api.fixer.io/latest?base=USD', function(err, data) {
-        if (err === null) {
-            r = data;
-            responseData.base = r.base;
-            responseData.date = r.date;
-            responseData.calc(r.rates);
-            responseData.showResults(curValDiv);
-            responseData.setCurrencyInOptions('USD');
+        
+        this.htmlElements.currencySelect.addEventListener('change', function(evt) {
+            let selected = evt.target || evt.srcElement;
+            self.recalc(selected.value);
+        });
+    },
+
+    recalc: function(base) {
+        console.log(base);
+    },
+
+    calc: function(d, amount = 1) {
+        console.log(d);
+        this.rates = [];
+        for (var key in d) {
+            if (d.hasOwnProperty(key)) {
+                this.rates.push({'cur': key, 'val': (amount * d[key]).toFixed(2)});
+            }
         }
-        else {
-            console.log('Błąd połączenia z API fixer.io !!! Status request: '+err);
-            curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+err;
+    },
+    
+    getCurrency: function(code) {
+        let res = {};
+        for (var i = 0; i < currencies.length; i++) {
+            if (currencies[i].code == code) {
+                res.name = currencies[i].name;
+                res.country = currencies[i].country;
+            }
         }
-    });
+        return res;
+    },
+    
+    showResults: function(e) {
+        var self = this;
+        e.innerHTML = '';
+        var tab = document.createElement("table");
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode("Waluta"));
+        tr.appendChild(th);
+        th = document.createElement("th");
+        th.appendChild(document.createTextNode("Nazwa"));
+        tr.appendChild(th);
+        th = document.createElement("th");
+        th.appendChild(document.createTextNode("Kraj"));
+        tr.appendChild(th);
+        th = document.createElement("th");
+        th.appendChild(document.createTextNode("Wartość"));
+        tr.appendChild(th);
+        tab.appendChild(tr);
+        
+        this.rates.forEach(function(item, index) {
+            let res = self.getCurrency(item.cur);
+            tr = document.createElement("tr");
+            td = document.createElement("td");
+            td.appendChild(document.createTextNode(item.cur));
+            tr.appendChild(td);
+            td = document.createElement("td");
+            td.appendChild(document.createTextNode(res.name));
+            tr.appendChild(td);
+            td = document.createElement("td");
+            td.appendChild(document.createTextNode(res.country));
+            tr.appendChild(td); 
+            td = document.createElement("td");
+            td.appendChild(document.createTextNode(item.val));
+            tr.appendChild(td);
+            tab.appendChild(tr);
+        });    
+        e.appendChild(tab);
+    },
+    
+    setCurrenciesInOptions: function(def) {
+        let self = this;
+        if (def !== null) {
+            var selDefOpt = document.createElement("option");
+            var selDefOptText = document.createTextNode(def);
+            selDefOpt.appendChild(selDefOptText);
+            this.htmlElements.currencySelect.appendChild(selDefOpt);
+        }
+        this.rates.forEach(function(item, index) {
+            var selOpt = document.createElement("option");
+            var selOptText = document.createTextNode(item.cur);
+            selOpt.appendChild(selOptText);
+            self.htmlElements.currencySelect.appendChild(selOpt);
+        });
+    },
+    
+    getJson: function(url) {
+        var self = this;
+        let httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', url, true);
+        httpRequest.responseType = 'json';
+        httpRequest.onload = function() {
+            if (this.status === 200 && this.readyState === 4) {
+                self.responseData = this.response;
+                self.responseData.rates[this.response.base] = 1;
+                self.base = this.response.base;
+                self.calc(self.responseData.rates);
+                self.showResults(self.htmlElements.curValDiv);
+                self.setCurrenciesInOptions(self.base);
+            } else {
+                console.log('Błąd połączenia z API fixer.io !!! Status request: '+this.status);
+                self.htmlElements.curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+this.status;
+            }
+        };
+        httpRequest.send();
+    }
+};
+
+window.onload = function() {
+    currencyCalc.init(this, 'https://api.fixer.io/latest');
 };
