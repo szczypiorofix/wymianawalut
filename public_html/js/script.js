@@ -331,20 +331,34 @@ var currencyCalc = {
         
         this.htmlElements.currencySelect.addEventListener('change', function(evt) {
             let selected = evt.target || evt.srcElement;
-            self.recalc(selected.value);
+            self.rates = self.recalc(selected.value);
+            self.showResults(self.htmlElements.curValDiv);
         });
     },
 
     recalc: function(base) {
-        console.log(base);
+        let b;
+        for (var i = 0; i < this.rates.length; i++) {
+            if (this.rates[i].cur === base) {
+                b = this.rates[i];
+            }
+        }
+        //console.log(b);
+        let temp = [];
+        for (var i = 0; i < this.rates.length; i++) {
+            //console.log(this.rates[i].cur);
+            temp.push({'cur': this.rates[i].cur, 'val': ((1 / this.rates[i].val) * b.val)});
+        }
+        //temp.push({'cur': b.cur, 'val': 1});
+        return temp;
     },
 
     calc: function(d, amount = 1) {
-        console.log(d);
+        //console.log(d);
         this.rates = [];
         for (var key in d) {
             if (d.hasOwnProperty(key)) {
-                this.rates.push({'cur': key, 'val': (amount * d[key]).toFixed(2)});
+                this.rates.push({'cur': key, 'val': (amount * d[key])});
             }
         }
     },
@@ -352,7 +366,7 @@ var currencyCalc = {
     getCurrency: function(code) {
         let res = {};
         for (var i = 0; i < currencies.length; i++) {
-            if (currencies[i].code == code) {
+            if (currencies[i].code === code) {
                 res.name = currencies[i].name;
                 res.country = currencies[i].country;
             }
@@ -393,7 +407,7 @@ var currencyCalc = {
             td.appendChild(document.createTextNode(res.country));
             tr.appendChild(td); 
             td = document.createElement("td");
-            td.appendChild(document.createTextNode(item.val));
+            td.appendChild(document.createTextNode(item.val.toFixed(4)));
             tr.appendChild(td);
             tab.appendChild(tr);
         });    
