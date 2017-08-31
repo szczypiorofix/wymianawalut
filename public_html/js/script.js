@@ -1,19 +1,24 @@
 
 /**
- * Prosta, mała aplikacja do przelicznaia kursów różnych walut wg. aktualnych kursów
- * na świecie. Dane pochodzą z API http://fixer.io/ i aktualizowane są codziennie około 4PM CET.
- * Walutą bazową jest euro (EUR).
- * Z listy rozwijanej wybrać można walutę spośród 32 dostępnych walut.
- * Pole pozwala na wprowadzenie kwoty do przeliczenia po aktulanym kursie kusie walut wg. wybranej waluty bazowej.
+ * ############################################################################################################ 
  * 
- * @type object Główny obiekt aplikacji.
- * @version 1.0 
- * @property {object} root Obiekt root tymczasowo bez przeznaczenia.
- * @property {object} responseData Obiekt responseData - dane pochodzące z serwera. Obiekt zawiera kody walut i ich akutalne wartość wg. waluty bazowej.
- * @property {object} htmlElements Obiekt zawierający 3 elementy widoku html, lista rozwijana, pole wprowadzania oraz element div w tkórym umieszczana jest tabelka z danymi
- * @property {string} base Początkowa waluta (domyślnie EUR).
- * @property {integer} accuracy Suwak z ustawieniami dokładności (zaokrąglania kursów)
- * @property {array} rates Tablica z obiektami zawierająca dane na temat kodów walut i ich aktualnym kursie.
+ * A simple, small application for converting the rates of different currencies according to the current rates.
+ * The data comes from the http://fixer.io/ API and are updated daily around 4PM CET.
+ * The base currency is euro (EUR).
+ * From the drop-down list you can select one of the 32 available currencies.
+ * You can enter the amount to be converted at the current exchange rate of the currency you have selected.
+ * 
+ * ############################################################################################################
+ * 
+ *   
+ * @type object The main application object.
+ * @version 1.1 
+ * @property {object} root temporary without a use.
+ * @property {object} responseData data that came from the API. Includes currency code and rate.
+ * @property {object} htmlElements Object containing 3 HTML elements: drop-down list, number input and div which is a container for the table with data from API
+ * @property {string} base Initial currency (default it's EUR).
+ * @property {integer} accuracy Accuracy (decimals) of the currency rates.
+ * @property {array} rates Array with objects containing currency codes and rates.
  * @author Piotr Wróblewski <poczta@wroblewskipiotr.pl>
  */
 var currencyCalc = {
@@ -25,9 +30,9 @@ var currencyCalc = {
     rates: [],
 
     /**
-     * Funkcja inicjująca pobranie informacji z API fixer.io oraz przypisanie elementów HTML do własności obiektu
-     * a także zainicjowanie listenerów: listy rozwijanej i pola do wpisywania sumy.
-     * @param {object} root - na razie bez większego wykorzystania w programie.
+     * Initial method. It retrieves data from fixer.io API and assigns HTML elements to the properties of the main application object.
+     * In this method the listeners of input fields are initiated.
+     * @param {object} root - Temporary without a use.
      * @returns {void}
      */
     init: function(root) {
@@ -55,11 +60,11 @@ var currencyCalc = {
     },
 
     /**
-     * Funkcja do przeliczania kursu walut podczas zmieniania aktualnej waluty. Kursy przeliczane są 
-     * na podstawie danych z API pobranych w momencie uruchamiania strony, bez wykonywania kolejnych requestów.
-     * @param {string} current - kod obecnej waluty (domyślnie. 'EUR');
-     * @param {integer} amount - kwota pieniędzy danej waluty do przeliczenia
-     * @returns {Array|currencyCalc.recalc.temp} tablica z kursami przeliczona na nowo.
+     * This method calculates currency rates when the current base currency is changed. Those rates are calculated
+     * based on a data received from API, when the website is loaded, without additional requests.
+     * @param {string} current - Currency code ('EUR' is default).
+     * @param {integer} amount - Amount of currency to convert.
+     * @returns {Array|currencyCalc.recalc.temp} a new array with recalculated currency rates.
      */
     recalc: function(current, amount) {
         let b;
@@ -78,11 +83,9 @@ var currencyCalc = {
     },
 
     /**
-     * Funkcja czyszcząca aktualną tablicę danych i wprowadzające do niej nowe dane.
-     * Głównym zadaniem funkcji jest zamiana obiektu {kod_waluty: wartość, kod_waluty: wartość ...}
-     * na [{cur: kod_waluty, val: wartość}]
-     * @param {object} d - obiekt zawierający kody walut oraz ich aktualny przelicznik wg. waluty bazowej.
-     * @param {integer} amount - suma pieniędzy do przeliczenia.
+     * This method removes all data from array of currency rates and puts the new data in the array in the right format.
+     * @param {object} d - Object containing currency codes and rates.
+     * @param {integer} amount - Amount of currency to convert.
      * @returns {void}
      */
     calc: function(d, amount = 1) {
@@ -95,8 +98,8 @@ var currencyCalc = {
     },
     
     /**
-     * Funkcja wykorzystywana przy zmianie dokładność (ilość miejsc dziesiętnych) wyświetlanego wyniku.
-     * @param {integer} a Liczba miejsc po przecinku w wyniku kursu danej waluty (wartości całkowite od 1 do 4)
+     * This method updates the accuracy of currency rates (decimals).
+     * @param {integer} a decimals (integer values from 1 to 4)
      * @returns {void}
      */
     changeAccuracy: function(a) {
@@ -104,8 +107,8 @@ var currencyCalc = {
     },
     
     /**
-     * Funkcja pobierająca dane na temat kraju i nazwy waluty na podstawie kodu z tablicy 'currencies'
-     * @param {string} code - kod waluty np. 'EUR'
+     * This method retrieves name of the country and current currency from 'currencies' array, based on currency code.
+     * @param {string} code - currency code eg. 'EUR'
      * @returns {currencyCalc.getCurrency.res}
      */
     getCurrency: function(code) {
@@ -120,10 +123,10 @@ var currencyCalc = {
     },
     
     /**
-     * Funkcja tworząca tabelę z kodami i nazwami walut, kraju gdzie obowiązuje oraz aktualnymi kursami tych walut.
-     * Po utworzeniu tabela dodawana jest do elementu html 'e'.
-     * @param {object} e element div html ('curValDiv')
-     * @param {integer} a dokładność (1 - 4), czyli ilość miejsc po przecinku w wyniku.
+     * This method creates a new table with obtained data: currency code, currency name, country/region and value .
+     * Newly created table will be placed in 'e' HTML element.
+     * @param {object} e 'div' HTML element ('curValDiv')
+     * @param {integer} a number of decimals places (1 - 4).
      * @returns {void}
      */
     showResults: function(e, a = 4) {
@@ -133,13 +136,13 @@ var currencyCalc = {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
         var th = document.createElement("th");
-        th.appendChild(document.createTextNode("Waluta"));
+        th.appendChild(document.createTextNode("Kod waluty"));
         tr.appendChild(th);
         th = document.createElement("th");
-        th.appendChild(document.createTextNode("Nazwa"));
+        th.appendChild(document.createTextNode("Nazwa waluty"));
         tr.appendChild(th);
         th = document.createElement("th");
-        th.appendChild(document.createTextNode("Kraj"));
+        th.appendChild(document.createTextNode("Kraj / Region"));
         tr.appendChild(th);
         th = document.createElement("th");
         th.appendChild(document.createTextNode("Wartość"));
@@ -167,8 +170,8 @@ var currencyCalc = {
     },
     
     /**
-     * Funkcja dodająca wartości kodów walut do listy rozwijanej. Lista ta służy do zmiany akutalnej waluty do przeliczania.
-     * @param {string} def - bazowy domyślny kod waluty ('EUR')
+     * This method adds currency codes to the top-down list.
+     * @param {string} def - default currency code ('EUR')
      * @returns {void}
      */
     setCurrenciesInOptions: function(def) {
@@ -180,7 +183,7 @@ var currencyCalc = {
             this.htmlElements.currencySelect.appendChild(selDefOpt);
         }
         this.rates.forEach(function(item, index) {
-            // Nie dodawanie ostatniej pozycji - powtórzona waluta EUR.
+            // The last item in the top-down list will not be shown (double EUR item)
             if (index === self.rates.length-1) return;
             
             var selOpt = document.createElement("option");
@@ -191,7 +194,7 @@ var currencyCalc = {
     },
     
     /**
-     * Funkcja wykonująca request do API fixer.io przy pomocy polecenia AJAX.
+     * This method is sending AJAX request to fixer.io API.
      * @param {string} url - adres API do pobierania danych
      * @returns {Boolean} - true jeśli odpowiedź z serwera API jest poprawna;
      */
@@ -202,7 +205,8 @@ var currencyCalc = {
         httpRequest.responseType = 'json';
         httpRequest.onload = function() {
             if (this.status === 200 && this.readyState === 4) {
-                // Jeśli odpowiedź z serwera jest poprawna to pobierane są dane na temat walut.
+                // If the API response is correct the data about current currencies the objects are updated and the top-down list
+                // is filled with currency codes.
                 self.responseData = this.response;
                 self.responseData.rates[this.response.base] = 1;
                 self.calc(self.responseData.rates);
@@ -210,16 +214,16 @@ var currencyCalc = {
                 self.base = this.response.base;
                 self.setCurrenciesInOptions(self.base);
             } else {
-                console.log('Błąd połączenia z API fixer.io !!! Status request: '+this.status);
-                self.htmlElements.curValDiv.innerHTML = 'Błąd połączenia z API fixer.io !!! Status request: '+this.status;
+                console.log('Fixer.io API connection error !!! Status request: '+this.status);
+                self.htmlElements.curValDiv.innerHTML = 'Fixer.io API connection error !!! Status request: '+this.status;
             }
         };
         httpRequest.send();
     },
     
     /**
-     * Tablica z nazwami krajów/regionów, obowiązującymi walutami oraz ich kodami
-     * @type Array - 
+     * A table with the names of countries / regions, the current currencies and their codes.
+     * @type Array - {country: country_name, code: currency_code_name, name: curreny_name}
      */
     currencies: [
         {country: 'Australia', code: 'AUD', name: 'Dolar'},
