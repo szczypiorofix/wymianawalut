@@ -6,4 +6,4 @@ Pozwala na przeliczanie przeliczanie określonej kwoty w wybranej walucie wedłu
 Dane pochodzą z API http://fixer.io/ i aktualizowane są codziennie około 4PM CET.
 Pobierane są dane dla 32 najpopularniejszych walut na świecie według domyślnej waluty bazowej czyli euro (EUR).
 
-Jakiś dodatkowy tekst.
+Link projektu: [Kalkulator wymiany walut](https://szczypiorofix.github.io/wymianawalut/)
