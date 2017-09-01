@@ -9,3 +9,8 @@ Pobierane są dane dla 32 najpopularniejszych walut na świecie według domyśln
 Link projektu Github: [Kalkulator wymiany walut](https://szczypiorofix.github.io/wymianawalut/)
 
 Strona domowa: [Kalkulator wymiany walut](https://www.wroblewskipiotr.pl/kanciarz/)
+
+
+## Licencja
+
+Ten projekt jest licencjonowany na podstawie licencji MIT - zobacz [LICENSE.md](LICENSE.md).
