@@ -28,6 +28,8 @@ var currencyCalc = {
     htmlElements: {},
     accuracy: 4,
     base: null,
+    inputFilterName: null,
+    inputFilterCode: null,
     currencyArray: [],
     rates: [],
     /**
@@ -367,34 +369,46 @@ var currencyCalc = {
         this.htmlElements.filterCodes = document.getElementById('filtercodes');
         this.htmlElements.filterNames = document.getElementById('filternames');
 
+        var td1, td2;
+
         this.htmlElements.filterCodes.addEventListener('input', function() {
-            let inputFilter = this.value.toUpperCase();
-            let tr = tab.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[0];
-              if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(inputFilter) > -1) {
-                  tr[i].style.display = "";
+            self.inputFilterCode = this.value.toUpperCase();
+            self.inputFilterName = self.htmlElements.filterNames.value.toUpperCase();
+            let trData = tab.getElementsByTagName("tr");
+            for (i = 0; i < trData.length; i++) {
+              td1 = trData[i].getElementsByTagName("td")[0];
+              td2 = trData[i].getElementsByTagName("td")[1];
+              if (td1 && td2) {
+                if (td1.innerHTML.toUpperCase().indexOf(self.inputFilterCode) > -1 && td2.innerHTML.toUpperCase().indexOf(self.inputFilterName) > -1) {
+                    trData[i].style.display = "";
                 } else {
-                  tr[i].style.display = "none";
+                    trData[i].style.display = "none";
                 }
-              }       
+              }
             }
         });
 
         this.htmlElements.filterNames.addEventListener('input', function() {
-            let inputFilter = this.value.toUpperCase();
-            let tr = tab.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-              td = tr[i].getElementsByTagName("td")[1];
-              if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(inputFilter) > -1) {
-                  tr[i].style.display = "";
+            self.inputFilterCode = self.htmlElements.filterCodes.value.toUpperCase();
+            self.inputFilterName = this.value.toUpperCase();
+            let trData = tab.getElementsByTagName("tr");
+            for (i = 0; i < trData.length; i++) {
+              td1 = trData[i].getElementsByTagName("td")[0];
+              td2 = trData[i].getElementsByTagName("td")[1];
+              if (td2 && td1) {
+                if (td2.innerHTML.toUpperCase().indexOf(self.inputFilterName) > -1 && td1.innerHTML.toUpperCase().indexOf(self.inputFilterCode) > -1) {
+                    trData[i].style.display = "";
                 } else {
-                  tr[i].style.display = "none";
+                    trData[i].style.display = "none";
                 }
-              }       
+              }
             }
+        });
+
+        this.htmlElements.filterNames.addEventListener('input', function() {
+            inputFilter1 = this.value.toUpperCase();
+            inputFilter2 = this.value.toUpperCase();
+            let trData = tab.getElementsByTagName("tr");
         });
     },
     
@@ -439,6 +453,7 @@ var currencyCalc = {
                 self.showResults(self.htmlElements.curValDiv);
                 self.base = self.responseData.base;
                 self.setCurrenciesInOptions(self.base);
+                document.getElementById('loader').style.display = 'none';
                 //console.log(self.responseData);
             }
         }
