@@ -1,0 +1,13 @@
+Options -Indexes
+
+<Files "config.ini">
+	Order Allow,Deny
+	Deny from all
+</Files>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

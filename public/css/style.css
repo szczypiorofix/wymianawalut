@@ -1,0 +1,119 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+html,
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #eeeeee;
+  background-color: #333333;
+  width: 100%;
+  margin: 10px 0 10px 0;
+}
+p {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+#currentValues {
+  clear: both;
+  margin-top: 20px;
+}
+table {
+  border-collapse: collapse;
+  border: 2px solid gray;
+  border-radius: 3px;
+  padding: 5px;
+  width: 75%;
+  max-width: 425px;
+}
+.maindiv {
+  margin: 0 auto;
+}
+.maindiv h2 {
+  text-align: center;
+}
+.centered {
+  text-align: center;
+}
+tr,
+th,
+td {
+  text-align: center;
+}
+th {
+  font-size: 120%;
+  border: 2px solid gray;
+}
+td {
+  border: 1px solid gray;
+}
+.centered table {
+  max-width: 700px;
+  min-width: 400px;
+  margin: auto;
+}
+#inputValue {
+  height: 30px;
+  width: 100%;
+  min-width: 90px;
+  max-width: 150px;
+  background-color: #333333;
+  color: #eeeeee;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+  padding-left: 10px;
+}
+#currencySelect {
+  background: transparent;
+  height: 30px;
+  width: 100%;
+  min-width: 90px;
+  max-width: 150px;
+  -webkit-appearance: none;
+  overflow: hidden;
+  background: url('../down_arrow_select.jpg') no-repeat right #333333;
+  color: #eeeeee;
+  padding-left: 10px;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+}
+.inputFields {
+  width: 100%;
+  display: block;
+  margin-top: 10px;
+}
+.field {
+  width: 50%;
+  margin: 5px 25% 5px 25%;
+}
+.input-group {
+  width: 100%;
+  font-size: 18px;
+  margin-top: 25px;
+}
+.filter-div {
+  width: 100%;
+}
+#filtercodes,
+#filternames {
+  height: 30px;
+  width: 100%;
+  min-width: 90px;
+  max-width: 150px;
+  background-color: #333333;
+  color: #eeeeee;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+  padding-left: 10px;
+}
+.filtercodesclass,
+.filternamesclass {
+  height: 26px;
+  width: 100%;
+  min-width: 90px;
+  max-width: 150px;
+  background-color: #333333;
+  color: #eeeeee;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+  padding-left: 10px;
+}
