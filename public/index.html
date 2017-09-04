@@ -48,9 +48,24 @@
 
                 <div class="table-div">
                     <div id="loader" class="loader-div">
-                        <p>Loading data ...</p>
                     </div>
                     <div id="currentValues">
+                        <table id="tableresults">
+                            <thead>
+                                <tr>
+                                    <th>Currency code</th>
+                                    <th>Currency name</th>
+                                    <th>Amount</th>
+                                </tr>
+                                <tr>
+                                    <th><input type="text" id="filtercodes" class="filtercodesclass" placeholder="Filter code"></th>
+                                    <th><input type="text" id="filternames" class="filternamesclass" placeholder="Filter name"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablebodyresults">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

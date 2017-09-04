@@ -215,33 +215,49 @@ var currencyCalc = {
      * @returns {void}
      */
     init: function(root) {
-        let self = this;
+        var self = this;
         this.root = root;
         this.htmlElements.curValDiv = document.getElementById('currentValues');
         this.htmlElements.inputValue = document.getElementById('inputValue');
         this.htmlElements.currencySelect = document.getElementById('currencySelect');
+        this.htmlElements.tableresults = document.getElementById('tableresults');
+        this.htmlElements.tablebodyresults = document.getElementById('tablebodyresults');
+        this.htmlElements.filterCodes = document.getElementById('filtercodes');
+        this.htmlElements.filterNames = document.getElementById('filternames');
 
         this.getJson();
         
         this.htmlElements.inputValue.addEventListener('input', function() {
             if (this.value !== '' && this.value !== null && this.value > 0) {
+                self.inputFilterCode = self.htmlElements.filterCodes.value.toUpperCase();
+                self.inputFilterName = self.htmlElements.filterNames.value.toUpperCase();
                 self.rates = self.recalc(self.base, this.value);
-                self.showResults(self.htmlElements.curValDiv);   
+                self.showResults(self.htmlElements.curValDiv, self.accuracy, self.inputFilterCode, self.inputFilterName); 
+                self.filterResultsCodes();
+                self.filterResultsNames();
             }
         });
         
         this.htmlElements.currencySelect.addEventListener('change', function(evt) {
             let selected = evt.target || evt.srcElement;
             self.rates = self.recalc(selected.value, self.htmlElements.inputValue.value);
-            self.showResults(self.htmlElements.curValDiv);
+            self.inputFilterCode = self.htmlElements.filterCodes.value.toUpperCase();
+            self.inputFilterName = self.htmlElements.filterNames.value.toUpperCase();
+            self.showResults(self.htmlElements.curValDiv, self.accuracy, self.inputFilterCode, self.inputFilterName);
+            self.filterResultsCodes();
+            self.filterResultsNames();
             self.base = selected.value;
         });
+
+        this.htmlElements.filterCodes.addEventListener('input', function() {self.filterResultsCodes()});
+        
+        this.htmlElements.filterNames.addEventListener('input', function() {self.filterResultsNames()});
     },
 
     /**
      * This method calculates currency rates when the current base currency is changed. Those rates are calculated
      * based on a data received from API, when the website is loaded, without additional requests.
-     * @param {string} current - Currency code ('EUR' is default).
+     * @param {string} current - Currency code ('USD' is default).
      * @param {integer} amount - Amount of currency to convert.
      * @returns {Array|currencyCalc.recalc.temp} a new array with recalculated currency rates.
      */
@@ -301,6 +317,44 @@ var currencyCalc = {
         return res;
     },
     
+    filterResultsCodes: function() {
+        let td1, td2, i;
+        //console.log(this.htmlElements.filterNames)
+        this.inputFilterCode = this.htmlElements.filterCodes.value.toUpperCase();
+        this.inputFilterName = this.htmlElements.filterNames.value.toUpperCase();
+        let trData = this.htmlElements.tablebodyresults.getElementsByTagName("tr");
+        for (i = 0; i < trData.length; i++) {
+          td1 = trData[i].getElementsByTagName("td")[0];
+          td2 = trData[i].getElementsByTagName("td")[1];
+          if (td1 && td2) {
+            if (td1.innerHTML.toUpperCase().indexOf(this.inputFilterCode) > -1 && td2.innerHTML.toUpperCase().indexOf(this.inputFilterName) > -1) {
+                trData[i].style.display = "";
+            } else {
+                trData[i].style.display = "none";
+            }
+          }
+        }
+    },
+
+    filterResultsNames: function() {
+        let td1, td2, i;
+        //console.log(this.htmlElements.filterCodes);
+        this.inputFilterCode = this.htmlElements.filterCodes.value.toUpperCase();
+        this.inputFilterName = this.htmlElements.filterNames.value.toUpperCase();
+        let trData = this.htmlElements.tablebodyresults.getElementsByTagName("tr");
+        for (i = 0; i < trData.length; i++) {
+          td1 = trData[i].getElementsByTagName("td")[0];
+          td2 = trData[i].getElementsByTagName("td")[1];
+          if (td2 && td1) {
+            if (td2.innerHTML.toUpperCase().indexOf(this.inputFilterName) > -1 && td1.innerHTML.toUpperCase().indexOf(this.inputFilterCode) > -1) {
+                trData[i].style.display = "";
+            } else {
+                trData[i].style.display = "none";
+            }
+          }
+        }
+    },
+
     /**
      * This method creates a new table with obtained data: currency code, currency name, country/region and value .
      * Newly created table will be placed in 'e' HTML element.
@@ -308,46 +362,14 @@ var currencyCalc = {
      * @param {integer} a number of decimals places (1 - 4).
      * @returns {void}
      */
-    showResults: function(e, a = 4) {
+    showResults: function(e, a = 4, fc = '', fn = '') {
         this.currencyArray = this.convertObjectToArray(this.currenciesObject);
         let self = this;
-        e.innerHTML = '';
-        var tab = document.createElement("table");
-        var tr = document.createElement("tr");
+        this.htmlElements.tablebodyresults.innerHTML = '';
+
         var td = document.createElement("td");
-        var th = document.createElement("th");
-        th.appendChild(document.createTextNode("Currency code"));
-        tr.appendChild(th);
-        th = document.createElement("th");
-        th.appendChild(document.createTextNode("Currency name"));
-        tr.appendChild(th);
-        th = document.createElement("th");
-        th.appendChild(document.createTextNode("Amount"));
-        tr.appendChild(th);
-        tab.appendChild(tr);
-        
-        //tab = document.createElement("table");
-        tr = document.createElement("tr");
-        td = document.createElement("td");
-        th = document.createElement("th");
-        var inputEl = document.createElement("input");
-        inputEl.className = 'filtercodesclass';
-        inputEl.id = 'filtercodes';
-        inputEl.placeholder = 'Filter code';
-        th.appendChild(inputEl);
-        tr.appendChild(th);
-        th = document.createElement("th");
-        inputEl = document.createElement("input");
-        inputEl.className = 'filternamesclass';
-        inputEl.id = 'filternames';
-        inputEl.placeholder = 'Filter name';
-        th.appendChild(inputEl);
-        tr.appendChild(th);
-        th = document.createElement("th");
-        th.appendChild(document.createTextNode(""));
-        tr.appendChild(th);
-        tab.appendChild(tr);
-        
+        var tr = document.createElement("tr");
+
         this.rates.forEach(function(item, index) {
             let res = self.getCurrency(item.cur);
             tr = document.createElement("tr");
@@ -359,57 +381,13 @@ var currencyCalc = {
             tr.appendChild(td);
             td = document.createElement("td");
             // Remove trailing zeros
-            td.appendChild(document.createTextNode(parseFloat(item.val.toFixed(a))));
+            //td.appendChild(document.createTextNode(parseFloat(item.val.toFixed(a))));
+            td.appendChild(document.createTextNode(item.val.toFixed(a)));
             tr.appendChild(td);
-            tab.appendChild(tr);
-        });    
-        e.appendChild(tab);
-
-
-        this.htmlElements.filterCodes = document.getElementById('filtercodes');
-        this.htmlElements.filterNames = document.getElementById('filternames');
-
-        var td1, td2;
-
-        this.htmlElements.filterCodes.addEventListener('input', function() {
-            self.inputFilterCode = this.value.toUpperCase();
-            self.inputFilterName = self.htmlElements.filterNames.value.toUpperCase();
-            let trData = tab.getElementsByTagName("tr");
-            for (i = 0; i < trData.length; i++) {
-              td1 = trData[i].getElementsByTagName("td")[0];
-              td2 = trData[i].getElementsByTagName("td")[1];
-              if (td1 && td2) {
-                if (td1.innerHTML.toUpperCase().indexOf(self.inputFilterCode) > -1 && td2.innerHTML.toUpperCase().indexOf(self.inputFilterName) > -1) {
-                    trData[i].style.display = "";
-                } else {
-                    trData[i].style.display = "none";
-                }
-              }
-            }
+            self.htmlElements.tablebodyresults.appendChild(tr);
         });
-
-        this.htmlElements.filterNames.addEventListener('input', function() {
-            self.inputFilterCode = self.htmlElements.filterCodes.value.toUpperCase();
-            self.inputFilterName = this.value.toUpperCase();
-            let trData = tab.getElementsByTagName("tr");
-            for (i = 0; i < trData.length; i++) {
-              td1 = trData[i].getElementsByTagName("td")[0];
-              td2 = trData[i].getElementsByTagName("td")[1];
-              if (td2 && td1) {
-                if (td2.innerHTML.toUpperCase().indexOf(self.inputFilterName) > -1 && td1.innerHTML.toUpperCase().indexOf(self.inputFilterCode) > -1) {
-                    trData[i].style.display = "";
-                } else {
-                    trData[i].style.display = "none";
-                }
-              }
-            }
-        });
-
-        this.htmlElements.filterNames.addEventListener('input', function() {
-            inputFilter1 = this.value.toUpperCase();
-            inputFilter2 = this.value.toUpperCase();
-            let trData = tab.getElementsByTagName("tr");
-        });
+        this.htmlElements.tableresults.appendChild(this.htmlElements.tablebodyresults);
+        e.appendChild(this.htmlElements.tableresults);
     },
     
     /**
@@ -426,7 +404,7 @@ var currencyCalc = {
             //this.htmlElements.currencySelect.appendChild(selDefOpt);
         }
         this.rates.forEach(function(item, index) {
-            // The last item in the top-down list will not be shown (double EUR item)
+            // The last item in the top-down list will not be shown (double USD item)
             if (index === self.rates.length-1) return;
 
             var selOpt = document.createElement("option");
@@ -440,7 +418,7 @@ var currencyCalc = {
     },
     
     /**
-     * This method is sending AJAX request to fixer.io API.
+     * This method is sending AJAX request to openexchangerates.org API.
      * @returns {void}
      */
     getJson: function() {

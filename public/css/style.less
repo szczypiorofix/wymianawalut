@@ -4,6 +4,12 @@
 @basebgcolor: #333333;
 @basefgcolor: #eeeeee;
 
+@rotate-0: rotate(0deg);
+@rotate-360: rotate(360deg);
+
+@spinner-color1: #fa8383;
+@spinner-color2: #3498db;
+
 html, body {
     font-family: 'Source Sans Pro', sans-serif;
     color: @basefgcolor;
@@ -117,6 +123,11 @@ td {
     margin-top: 25px;
 }
 
+th, tr, thead, table {
+    padding: 0;
+    margin: 0;
+}
+
 .filtercodesclass, .filternamesclass {
     height: 25px;
     min-width: 100%;
@@ -127,6 +138,8 @@ td {
     color: #eeeeee;
     border: 2px solid #ccc;
     border-radius: 2px;
+    margin: 0;
+    padding: 0;
     padding-left: 10px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -139,4 +152,46 @@ td {
     height: 100%;
 }
 
+.loader-div {
+    position: absolute;
+    border-bottom: 10px solid @spinner-color1;
+    border-top: 10px solid @spinner-color1;
+    border-left: 10px solid @spinner-color2;
+    border-right: 10px solid @spinner-color2;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    left: 50%;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { 
+        transform: @rotate-0;
+    }
+    100% { 
+        transform: @rotate-360; 
+    }
+}
+
+@-webkit-keyframes spin {
+    0% { 
+        transform: @rotate-0; 
+    }
+    100% { 
+        transform: @rotate-360; 
+    }
+}
+
+@-moz-keyframes spin {
+    0% { 
+        transform: @rotate-0; 
+    }
+    100% { 
+        transform: @rotate-360; 
+    }
+}
   
