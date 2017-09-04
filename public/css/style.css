@@ -90,21 +90,6 @@ td {
   font-size: 18px;
   margin-top: 25px;
 }
-.filter-div {
-  width: 100%;
-}
-#filtercodes,
-#filternames {
-  height: 30px;
-  width: 100%;
-  min-width: 90px;
-  max-width: 150px;
-  background-color: #333333;
-  color: #eeeeee;
-  border: 2px solid #ccc;
-  border-radius: 2px;
-  padding-left: 10px;
-}
 .filtercodesclass,
 .filternamesclass {
   height: 26px;
