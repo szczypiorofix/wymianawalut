@@ -8,7 +8,7 @@ Simply choose a currency from the top-down list and enter the amount of money an
 
 Github Pages: [Kanciarz - currency converter](https://szczypiorofix.github.io/wymianawalut/)
 
-Website: [Kanciarz - currency converter](https://www.wroblewskipiotr.pl/kanciarz/public)
+Website: [Kanciarz - currency converter](https://www.wroblewskipiotr.pl/kanciarz/)
 
 ## Author
 
