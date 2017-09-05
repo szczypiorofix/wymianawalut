@@ -12,6 +12,7 @@
         <meta property="og:description" content="Kanciarz - Currency Converter">
         <link rel="icon" type="image/png" href="logo.png" />
         <title>Kanciarz - Currency Converter</title>
+        <link rel="stylesheet" href="css/normalize.css?v=1">
         <link rel="stylesheet" href="css/style.css?v=8">
     </head>
     <body>
