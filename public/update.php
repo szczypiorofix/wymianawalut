@@ -1,5 +1,7 @@
 <?php
 
+    // CRON SCRIPT
+
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
@@ -23,8 +25,6 @@
     curl_close($c);
 
     $results['data'] = json_decode($data);
-    //$res = json_encode($results['data'], JSON_UNESCAPED_UNICODE);
-    //$data = json_decode($data);
     
     $dataFromAPI = json_decode($data);
     $base_rate = $dataFromAPI->base;

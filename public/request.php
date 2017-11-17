@@ -10,7 +10,6 @@ require_once 'config.php';
 
 $results = [];
 
-
 $db_host = Config::get('DB_HOST');
 $db_name = Config::get('DB_NAME');
 $db_user = Config::get('DB_USER');
@@ -28,17 +27,15 @@ try {
     $stm = $db->prepare("SELECT * FROM `rates`");
     $stm->execute();
     $data = $stm->fetchAll();
-    $results['data'] = $data;
 
     $res = [];
-    foreach($results['data'] as $d => $dx) {
+    foreach($data as $d => $dx) {
         $res['data'][$dx['code']] = $dx['rate'];
     }
 
     $stm = $db->prepare("SELECT `value` FROM `settings` WHERE `name`='base'");
     $stm->execute();
     $baseRate = $stm->fetch();
-
     $res['base'] = $baseRate['value'];
 } catch (PDOException $exc) {
     echo 'Błąd PDO !!! '.$exc->getMessage();
