@@ -427,7 +427,7 @@ var currencyCalc = {
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 self.responseData = JSON.parse(this.responseText);
-                self.calc(self.responseData.rates);
+                self.calc(self.responseData.data);
                 self.showResults(self.htmlElements.curValDiv);
                 self.base = self.responseData.base;
                 self.setCurrenciesInOptions(self.base);

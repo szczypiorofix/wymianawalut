@@ -8,19 +8,40 @@ define('CONFIG_FILE', '../config.ini');
 
 require_once 'config.php';
 
-define('CURRENCY_API_KEY', Config::get('CURRENCY_API_KEY'));
-
 $results = [];
 
-$c = curl_init();
-curl_setopt($c, CURLOPT_HEADER, 0);
-curl_setopt($c, CURLOPT_VERBOSE, 0);
-curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($c, CURLOPT_URL, 'https://openexchangerates.org/api/latest.json?app_id='.CURRENCY_API_KEY);
-curl_setopt($c, CURLOPT_HTTPGET, 1);
-$data = curl_exec($c);
-echo curl_error($c);
-curl_close($c);
 
-$results['data'] = json_decode($data);
-echo json_encode($results['data'], JSON_UNESCAPED_UNICODE);
+$db_host = Config::get('DB_HOST');
+$db_name = Config::get('DB_NAME');
+$db_user = Config::get('DB_USER');
+$db_pass = Config::get('DB_PASS');
+
+try {
+    $dsn = "mysql:host=$db_host;port=3306;dbname=$db_name;charset=UTF8;";
+    $opt = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ];
+    $db = new PDO($dsn, $db_user, $db_pass, $opt);
+
+    $stm = $db->prepare("SELECT * FROM `rates`");
+    $stm->execute();
+    $data = $stm->fetchAll();
+    $results['data'] = $data;
+
+    $res = [];
+    foreach($results['data'] as $d => $dx) {
+        $res['data'][$dx['code']] = $dx['rate'];
+    }
+
+    $stm = $db->prepare("SELECT `value` FROM `settings` WHERE `name`='base'");
+    $stm->execute();
+    $baseRate = $stm->fetch();
+
+    $res['base'] = $baseRate['value'];
+} catch (PDOException $exc) {
+    echo 'Błąd PDO !!! '.$exc->getMessage();
+}
+
+echo json_encode($res, JSON_UNESCAPED_UNICODE);
