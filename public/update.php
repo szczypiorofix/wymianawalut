@@ -12,8 +12,6 @@
 
     define('CURRENCY_API_KEY', Config::get('CURRENCY_API_KEY'));
 
-    $results = [];
-
     $c = curl_init();
     curl_setopt($c, CURLOPT_HEADER, 0);
     curl_setopt($c, CURLOPT_VERBOSE, 0);
@@ -23,8 +21,6 @@
     $data = curl_exec($c);
     echo curl_error($c);
     curl_close($c);
-
-    $results['data'] = json_decode($data);
     
     $dataFromAPI = json_decode($data);
     $base_rate = $dataFromAPI->base;
@@ -33,7 +29,7 @@
 
 	$db_host = Config::get('DB_HOST');
 	$db_name = Config::get('DB_NAME');
-	$db_user = Config::get('DB_USER');
+    $db_user = Config::get('DB_USER');
     $db_pass = Config::get('DB_PASS');
 	
 	try {
@@ -55,7 +51,7 @@
 
         // UPDATE SETTINGS TABLE
 		$stm = $db->prepare("UPDATE `settings` SET `value`=:v, `update_time`=NOW() WHERE `name`='base'");
-		$stm->bindParam(':v', $base_rate, PDO::PARAM_STR);
+        $stm->bindParam(':v', $base_rate, PDO::PARAM_STR);
         $stm->execute();
 
         echo 'Database has been successfully updated.';
