@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-define('CONFIG_FILE', '../config.ini');
+define('CONFIG_FILE', 'config.ini');
 
 require_once 'config.php';
 
@@ -33,10 +33,11 @@ try {
         $res['data'][$dx['code']] = $dx['rate'];
     }
 
-    $stm = $db->prepare("SELECT `value` FROM `settings` WHERE `name`='base'");
+    $stm = $db->prepare("SELECT * FROM `settings`");
     $stm->execute();
     $baseRate = $stm->fetch();
     $res['base'] = $baseRate['value'];
+    $res['update'] = $baseRate['update_time'];
 } catch (PDOException $exc) {
     echo 'Błąd PDO !!! '.$exc->getMessage();
 }

@@ -28,6 +28,7 @@ var currencyCalc = {
     htmlElements: {},
     accuracy: 4,
     base: null,
+    updateTime: null,
     inputFilterName: null,
     inputFilterCode: null,
     currencyArray: [],
@@ -224,6 +225,7 @@ var currencyCalc = {
         this.htmlElements.tablebodyresults = document.getElementById('tablebodyresults');
         this.htmlElements.filterCodes = document.getElementById('filtercodes');
         this.htmlElements.filterNames = document.getElementById('filternames');
+        this.htmlElements.updateTime = document.getElementById("update_time");
 
         this.getJson();
         
@@ -430,6 +432,7 @@ var currencyCalc = {
                 self.calc(self.responseData.data);
                 self.showResults(self.htmlElements.curValDiv);
                 self.base = self.responseData.base;
+                document.getElementById('update_time').innerHTML = self.responseData.update;
                 self.setCurrenciesInOptions(self.base);
                 document.getElementById('loader').style.display = 'none';
                 //console.log(self.responseData);
