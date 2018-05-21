@@ -6,7 +6,7 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    define('CONFIG_FILE', '../config.ini');
+    define('CONFIG_FILE', 'config.ini');
 
     require_once 'config.php';
 
